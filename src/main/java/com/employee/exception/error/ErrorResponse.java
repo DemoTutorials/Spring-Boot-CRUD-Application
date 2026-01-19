@@ -1,9 +1,12 @@
-package com.employee.exception.ErrorResponse;
+package com.employee.exception.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
-
 import java.time.LocalDateTime;
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse<T> {
     private Boolean success;
@@ -13,7 +16,7 @@ public class ErrorResponse<T> {
     private T data;
     private String error;
 
-    public ErrorResponse(String message, HttpStatus notFound) {
+    public ErrorResponse() {
     }
 
     public ErrorResponse(Boolean success, String message, HttpStatus httpStatus, T data) {
@@ -29,54 +32,6 @@ public class ErrorResponse<T> {
         this.message = message;
         this.httpStatus = httpStatus;
         this.localDateTime= LocalDateTime.now();
-        this.error = error;
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
-    }
-
-    public void setHttpStatus(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
         this.error = error;
     }
 

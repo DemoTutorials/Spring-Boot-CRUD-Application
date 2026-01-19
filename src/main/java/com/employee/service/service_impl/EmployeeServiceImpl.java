@@ -18,6 +18,7 @@ import java.util.Map;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+    private static final String EMPLOYEE_NOT_FOUND_MSG = "Employee Not Found with ID: ";
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
 
@@ -34,86 +35,84 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeAlreadyExistsException("An employee already exists with the provided Email ID:- "+employeeRequestDTO.getEmpEmail()+" or Contact No.:-" +employeeRequestDTO.getContactNo());
         }
         Employee employee = modelMapper.map(employeeRequestDTO, Employee.class);
-        Employee newEmployee = employeeRepository.save(employee);
-        return modelMapper.map(newEmployee, EmployeeResponseDTO.class);
+        Employee savedEmployee = employeeRepository.save(employee);
+        return modelMapper.map(savedEmployee, EmployeeResponseDTO.class);
     }
 
     @Override
     public List<EmployeeResponseDTO> getAll() {
-        List<Employee> employeeList = employeeRepository.findAllByIsDeletedFalse();
-        if(employeeList.isEmpty()){
+        List<Employee> employees = employeeRepository.findAllByIsDeletedFalse();
+        if(employees.isEmpty()){
             throw new EmployeeNotFoundException("Employees Not Found!...");
         }
-        List<EmployeeResponseDTO> list = employeeList.stream().map(employee -> modelMapper.map(employee, EmployeeResponseDTO.class)).toList();
-        return list;
+        return employees.stream().map(employee -> modelMapper.map(employee, EmployeeResponseDTO.class)).toList();
     }
 
     @Override
     public EmployeeResponseDTO getById(Long id) {
-        Employee employee = employeeRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found with ID:- " + id));
+        Employee employee = employeeRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MSG + id));
         return modelMapper.map(employee, EmployeeResponseDTO.class);
     }
 
     @Override
     public EmployeeResponseDTO update(Long id, EmployeeRequestDTO employeeRequestDTO) {
-        Employee employee = employeeRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found with ID:- " + id));
+        Employee employee = employeeRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MSG + id));
         modelMapper.map(employeeRequestDTO,employee);
-        Employee newEmployee = employeeRepository.save(employee);
-        return modelMapper.map(newEmployee, EmployeeResponseDTO.class);
+        Employee updatedEmployee = employeeRepository.save(employee);
+        return modelMapper.map(updatedEmployee, EmployeeResponseDTO.class);
     }
 
     @Override
     public void delete(Long id) {
-        Employee employee = employeeRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found with ID:- " + id));
-        employee.setActive(false);
-        employee.setDeleted(true);
+        Employee employee = employeeRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MSG + id));
+        employee.setIsActive(false);
+        employee.setIsDeleted(true);
         employeeRepository.save(employee);
     }
 
     @Override
     public EmployeeResponseDTO patchUpdate(Long id, Map<String, Object> updates) {
-        Employee employee = employeeRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found with ID:- " + id));
+        Employee employee = employeeRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MSG + id));
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
         updates.forEach((field,value)->{
             switch(field){
-                case "empName": employee.setEmpName((String) value);
-                    break;
-
-                case "empEmail": employee.setEmpEmail((String) value);
-                    break;
-
-                case "contactNo": employee.setContactNo((String) value);
-                    break;
-
-                case "address": employee.setAddress((String) value);
-                    break;
-
-                case "salary":
-                    if(value instanceof BigDecimal){
-                    employee.setSalary((BigDecimal) value);
+                case "empName" -> employee.setEmpName((String) value);
+                case "empEmail" -> employee.setEmpEmail((String) value);
+                case "contactNo" -> employee.setContactNo((String) value);
+                case "address" -> employee.setAddress((String) value);
+                case "salary" -> {
+                    try {
+                        if (value instanceof Number num) {
+                            employee.setSalary(BigDecimal.valueOf(num.doubleValue()));
+                        } else if (value instanceof String str) {
+                            employee.setSalary(new BigDecimal(str.trim()));
+                        } else {
+                            throw new IllegalArgumentException("Salary must be number or numeric string");
+                        }
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid salary value: " + value);
                     }
-                    break;
+                }
 
-                case "birthDate":
-                    if(value instanceof String){
-                        DateTimeFormatter formatter=DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-                        employee.setBirthDate(LocalDate.parse((String)value,formatter));
+                case "birthDate"-> {
+                    if (value instanceof String string) {
+                        employee.setBirthDate(LocalDate.parse(string, dateFormatter));
                     }
-                    break;
+                }
 
-                case "bloodGroup":
-                    if(value instanceof String){
-                        employee.setBloodGroup(BloodGroup.fromString((String) value));
+                case "bloodGroup" -> {
+                    if (value instanceof String string) {
+                        employee.setBloodGroup(BloodGroup.fromString(string));
+                    } else if (value instanceof BloodGroup bloodGroup) {
+                        employee.setBloodGroup(bloodGroup);
                     }
-                    else if(value instanceof BloodGroup){
-                        employee.setBloodGroup((BloodGroup) value);
-                    }
-                    break;
+                }
 
-                    default:
-                        throw new IllegalArgumentException("Filed is Not Supported");
+                    default ->
+                        throw new IllegalArgumentException("Field is Not Supported: "+ field);
             }
         });
-        Employee newEmployee = employeeRepository.save(employee);
-        return modelMapper.map(newEmployee, EmployeeResponseDTO.class);
+        Employee updatedEmployee = employeeRepository.save(employee);
+        return modelMapper.map(updatedEmployee, EmployeeResponseDTO.class);
     }
 }

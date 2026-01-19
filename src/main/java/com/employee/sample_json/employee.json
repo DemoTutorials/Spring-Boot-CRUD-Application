@@ -5,7 +5,7 @@
   "address": "Pen, Maharashtra",
   "salary": 75000.50,
   "birthDate": "09-Nov-1996",
-  "bloodGroup": "O_Positive"
+  "bloodGroup": "O_POSITIVE"
 },
   {
     "empName": "Ajinkya Deshmukh",
@@ -14,7 +14,7 @@
     "address": "Mumbai, Maharashtra",
     "salary": 85000.50,
     "birthDate": "10-Oct-1995",
-    "bloodGroup": "AB_Positive"
+    "bloodGroup": "AB_POSITIVE"
   },
   {
     "empName": "Ashutosh Kulkarni",
@@ -23,7 +23,7 @@
     "address": "Nagpur, Maharashtra",
     "salary": 88000.75,
     "birthDate": "05-Dec-1992",
-    "bloodGroup": "O_Positive"
+    "bloodGroup": "O_POSITIVE"
   },
   {
     "empName": "Sneha Deshmukh",
@@ -32,7 +32,7 @@
     "address": "Nashik, Maharashtra",
     "salary": 54000.25,
     "birthDate": "18-Jul-1999",
-    "bloodGroup": "AB_Positive"
+    "bloodGroup": "AB_POSITIVE"
   },
   {
     "empName": "Rohit Sharma",
@@ -41,7 +41,7 @@
     "address": "Delhi, India",
     "salary": 100000,
     "birthDate": "01-Mar-1990",
-    "bloodGroup": "O_Negative"
+    "bloodGroup": "O_POSITIVE"
   }
 
 

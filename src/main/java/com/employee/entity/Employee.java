@@ -2,13 +2,16 @@ package com.employee.entity;
 
 import com.employee.enums.BloodGroup;
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Employee {
 
@@ -64,134 +67,5 @@ public class Employee {
         updatedAt=LocalDateTime.now();
     }
 
-    public Employee() {
-    }
-
-    public Employee(Long id, String empName, String empEmail, String contactNo, String address, BigDecimal salary, LocalDate birthDate, BloodGroup bloodGroup, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.empName = empName;
-        this.empEmail = empEmail;
-        this.contactNo = contactNo;
-        this.address = address;
-        this.salary = salary;
-        this.birthDate = birthDate;
-        this.bloodGroup = bloodGroup;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmpName() {
-        return empName;
-    }
-
-    public void setEmpName(String empName) {
-        this.empName = empName;
-    }
-
-    public String getEmpEmail() {
-        return empEmail;
-    }
-
-    public void setEmpEmail(String empEmail) {
-        this.empEmail = empEmail;
-    }
-
-    public String getContactNo() {
-        return contactNo;
-    }
-
-    public void setContactNo(String contactNo) {
-        this.contactNo = contactNo;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public BigDecimal getSalary() {
-        return salary;
-    }
-
-    public void setSalary(BigDecimal salary) {
-        this.salary = salary;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public BloodGroup getBloodGroup() {
-        return bloodGroup;
-    }
-
-    public void setBloodGroup(BloodGroup bloodGroup) {
-        this.bloodGroup = bloodGroup;
-    }
-
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", empName='" + empName + '\'' +
-                ", empEmail='" + empEmail + '\'' +
-                ", contactNo='" + contactNo + '\'' +
-                ", address='" + address + '\'' +
-                ", salary=" + salary +
-                ", birthDate=" + birthDate +
-                ", bloodGroup=" + bloodGroup +
-                ", isDeleted=" + isDeleted +
-                ", isActive=" + isActive +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }
 
